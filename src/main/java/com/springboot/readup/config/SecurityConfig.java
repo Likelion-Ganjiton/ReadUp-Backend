@@ -35,7 +35,6 @@ public class SecurityConfig {
 
                                 "/api/import/**",
 
-                                // 🔥 뉴스 임베딩 오픈 API
                                 "/api/news/collection/init",
                                 "/api/news/embed-all"
                         ).permitAll()
