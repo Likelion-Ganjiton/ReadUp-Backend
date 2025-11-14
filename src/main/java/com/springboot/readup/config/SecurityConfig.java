@@ -21,7 +21,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(sess ->
+                        sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/users/signup",
@@ -29,7 +31,9 @@ public class SecurityConfig {
                                 "/api/users/find-id",
                                 "/api/users/find-password",
                                 "/api/users/verify-code",
-                                "/api/users/reset-password"
+                                "/api/users/reset-password",
+
+                                "/api/import/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
