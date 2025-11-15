@@ -1,7 +1,9 @@
 package com.springboot.readup.summary.controller;
 
 import com.springboot.readup.summary.dto.SummaryCheckResponse;
+import com.springboot.readup.summary.dto.SummarySubmitResponse;
 import com.springboot.readup.summary.service.SummaryService;
+import com.springboot.readup.summary.dto.SummarySubmitRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,5 +21,11 @@ public class SummaryController {
         SummaryCheckResponse response = summaryService.checkSummary(newsId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<SummarySubmitResponse> submitSummary(@RequestBody SummarySubmitRequest req) {
+        SummarySubmitResponse res = summaryService.submitSummary(req);
+        return ResponseEntity.ok(res);
     }
 }
