@@ -1,11 +1,13 @@
 package com.springboot.readup.news.service;
 
+import com.springboot.readup.news.dto.HomeNewsResponse;
 import com.springboot.readup.news.dto.NewsDetailResponse;
 import com.springboot.readup.news.dto.TodayNewsResponse;
 import com.springboot.readup.news.entity.News;
 import com.springboot.readup.news.repository.NewsRepository;
 import com.springboot.readup.user.entity.UserEntity;
 import com.springboot.readup.user.repository.UserRepository;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.ZoneId;
@@ -75,5 +77,12 @@ public class NewsService {
     public News getNewsEntity(Long newsId) {
         return newsRepository.findById(newsId)
                 .orElseThrow(() -> new IllegalArgumentException("뉴스가 존재하지 않습니다. newsId=" + newsId));
+    }
+
+    public List<HomeNewsResponse> getHomeNews() {
+        List<News> newsList = newsRepository.findTop3ByOrderByPublishDateDesc();
+        return newsList.stream()
+                .map(HomeNewsResponse::from)
+                .collect(Collectors.toList());
     }
 }
