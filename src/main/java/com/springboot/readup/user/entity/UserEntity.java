@@ -40,6 +40,11 @@ public class UserEntity {
 
     private LocalDateTime createdAt;
 
+    @ElementCollection
+    @CollectionTable(name = "user_alert_times", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "alert_time")
+    private List<String> alertTimes;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
