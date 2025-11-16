@@ -36,7 +36,8 @@ public class SecurityConfig {
                                 "/api/import/**",
 
                                 "/api/news/collection/init",
-                                "/api/news/embed-all"
+                                "/api/news/embed-all",
+                                "/admin/news/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

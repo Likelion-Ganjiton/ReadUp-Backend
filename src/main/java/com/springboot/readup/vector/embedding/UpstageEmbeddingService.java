@@ -13,7 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UpstageEmbeddingService {
 
-    @Value("${upstage.api.key}")
+    @Value("${upstage.embedding.api.key}")
     private String apiKey;
 
     private final RestTemplate rest = new RestTemplate();

@@ -15,7 +15,7 @@ public class EmbeddingService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${upstage.api.key}")
+    @Value("${upstage.embedding.api.key}")
     private String apiKey;
 
     private static final String API_URL = "https://api.upstage.ai/v1/embeddings";
