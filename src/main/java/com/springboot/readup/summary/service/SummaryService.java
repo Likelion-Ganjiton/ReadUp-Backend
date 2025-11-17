@@ -45,6 +45,7 @@ public class SummaryService {
                 )
                 .orElseGet(() -> SummaryCheckResponse.builder()
                         .summaryExists(false)
+                        .summaryId(null)
                         .build()
                 );
     }
