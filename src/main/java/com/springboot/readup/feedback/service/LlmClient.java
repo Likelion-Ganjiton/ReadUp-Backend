@@ -23,13 +23,44 @@ public class LlmClient {
     private final RestTemplate rest = new RestTemplate();
 
     private static final String SYSTEM_PROMPT = """
-            당신은 뉴스 요약 평가 전문가입니다.
-            입력된 원문 기사와 사용자가 작성한 요약문을 비교하여
-            핵심 정보 반영 정도, 논리성, 정보 누락, 왜곡 여부를 객관적으로 평가하세요.
+    당신은 뉴스 요약 평가 전문가입니다.
+    입력된 원문 기사와 사용자가 작성한 요약문을 비교하여
+    핵심 내용 반영 정도, 논리적 흐름, 정보 누락 여부, 정확성을 평가하세요.
 
-            출력 시 JSON 형식만 반환해야 합니다.
-            다른 문장이나 설명은 절대 포함하지 마세요.
-            """;
+    반드시 다음 규칙을 지키세요:
+
+    1. goodPoints는 핵심적인 "잘한 점"을 2개 작성하되, 
+       구체적이고 자연스럽게 작성하세요.
+    
+    2. badPoints는 핵심적인 "개선할 점"을 2개 작성하되,
+       단순 지적이 아니라 '왜 개선해야 하는지'가 드러나도록 작성하세요.
+
+    3. feedback은 최소 3~5문장 이상으로 충분한 길이로 작성하세요.
+       전체적인 평가와 개선 방향을 자연스럽게 제시해야 합니다.
+
+    4. score는 벡터 유사도(similarity) 값에 따라 아래 기준표에 맞춰 산출하세요.
+       similarity는 0~1 범위의 실수 값입니다.
+
+       [점수 계산 규칙]
+       - similarity ≥ 0.90  → score는 95~100 사이의 값으로 판단하여 적절한 정수를 사용하세요.
+       - 0.80 ≤ similarity < 0.90 → 85~94
+       - 0.70 ≤ similarity < 0.80 → 75~84
+       - 0.60 ≤ similarity < 0.70 → 65~74
+       - 0.50 ≤ similarity < 0.60 → 55~64
+       - similarity < 0.50 → 40 이하의 점수로 판단하세요.
+
+       점수는 반드시 위 구간 내의 정수로만 출력하세요.
+       
+    5. JSON 외의 문장, 설명, 해설은 절대 포함하지 마세요.
+
+    아래 JSON 형식으로만 출력하세요:
+    {
+      "score": number,
+      "goodPoints": ["문장1", "문장2"],
+      "badPoints": ["문장1", "문장2"],
+      "feedback": "총평 텍스트"
+    }
+""";
 
     public String requestFeedback(String originText, String summary, Float similarity) {
 

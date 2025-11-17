@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class SummaryCheckResponse {
 
-    private boolean summaryExists;
-    private Long summaryId;   // 없으면 null
+    private boolean summaryExists; // 요약 존재 여부
+    private Long summaryId;        // 없으면 null
 }
