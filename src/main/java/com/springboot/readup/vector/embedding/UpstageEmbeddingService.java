@@ -22,7 +22,6 @@ public class UpstageEmbeddingService {
 
         String url = "https://api.upstage.ai/v1/embeddings";
 
-        // input은 배열 형태로 보내는 것이 Upstage 공식 표준
         Map<String, Object> body = Map.of(
                 "model", "embedding-passage",
                 "input", List.of(text)
@@ -39,18 +38,16 @@ public class UpstageEmbeddingService {
                 Map.class
         );
 
-        // ⚠ data는 List임
-        List<Map<String, Object>> data = (List<Map<String, Object>>) res.getBody().get("data");
+        List<Map<String, Object>> data =
+                (List<Map<String, Object>>) res.getBody().get("data");
 
-        // 첫 번째 벡터 접근
         Map<String, Object> first = data.get(0);
 
-        // embedding은 List<Double>
-        List<Double> raw = (List<Double>) first.get("embedding");
-
-        // Double → Float 변환
-        return raw.stream()
-                .map(Double::floatValue)
+        List<Float> vector = ((List<?>) first.get("embedding"))
+                .stream()
+                .map(v -> ((Number) v).floatValue())
                 .toList();
+
+        return vector;
     }
 }
