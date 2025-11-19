@@ -100,7 +100,7 @@ public class MypageService {
         String loginId = (String) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
-        UserEntity user = userRepository.findByLoginId(loginId)
+        userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
         FeedbackDetailDto detail = feedbackDetailRepository.findDetail(summaryId);

@@ -20,7 +20,8 @@ public interface FeedbackDetailRepository extends JpaRepository<UserSummaryEntit
             f.aiScore,
             f.goodPoints,
             f.badPoints,
-            f.aiRevisedSummary
+            f.aiRevisedSummary,
+            (SELECT COUNT(l) FROM LikeEntity l WHERE l.summaryId = s.id)
         )
         FROM UserSummaryEntity s
         JOIN News n ON s.newsId = n.id

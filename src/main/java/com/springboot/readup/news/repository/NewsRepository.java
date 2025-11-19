@@ -25,4 +25,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     // 기존 List 기반 메서드 유지 가능
     List<News> findAllByCategoryOrderByPublishDateDesc(String category);
     List<News> findAllByOrderByPublishDateDesc();
+
+    List<News> findByCategory(String category);
+
 }
