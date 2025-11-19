@@ -1,7 +1,6 @@
-package com.springboot.readup.community;
+package com.springboot.readup.community.dto.feed;
 
 import lombok.*;
-
 import java.util.List;
 
 @Getter
@@ -12,5 +11,6 @@ import java.util.List;
 public class CommunityFeedResponse {
 
     private String category;
-    private List<CommunityDto> items;
+    private List<FeedSummaryResponse> summaries;
+
 }

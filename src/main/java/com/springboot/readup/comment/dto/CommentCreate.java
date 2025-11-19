@@ -1,4 +1,4 @@
-package com.springboot.readup.comment;
+package com.springboot.readup.comment.dto;
 
 import lombok.*;
 

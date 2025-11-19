@@ -23,12 +23,15 @@ public class FeedbackQueryRepositoryImpl implements FeedbackQueryRepository {
                 n.category,
                 f.aiScore,
                 SUBSTRING(us.userSummary, 1, 40),
-                us.createdAt
+                us.createdAt,
+                COUNT(l.id)
             )
             FROM UserSummaryEntity us
             JOIN AiFeedback f ON f.userSummaryId = us.id
             JOIN News n ON n.id = us.newsId
+            LEFT JOIN LikeEntity l ON l.summaryId = us.id
             WHERE us.userId = :userId
+            GROUP BY us.id, n.title, n.category, f.aiScore, us.userSummary, us.createdAt
             ORDER BY us.createdAt DESC
             """;
 

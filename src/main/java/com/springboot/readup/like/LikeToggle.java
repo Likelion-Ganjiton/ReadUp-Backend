@@ -2,7 +2,6 @@ package com.springboot.readup.like;
 
 import lombok.*;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,7 +9,7 @@ import lombok.*;
 @Builder
 public class LikeToggle {
 
+    private Long summaryId;
     private boolean liked;
-
     private long likeCount;
 }

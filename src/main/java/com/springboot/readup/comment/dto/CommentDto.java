@@ -1,7 +1,6 @@
-package com.springboot.readup.comment;
+package com.springboot.readup.comment.dto;
 
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,8 +10,8 @@ import java.time.LocalDateTime;
 @Builder
 public class CommentDto {
 
-    private Long id;
-    private String writerName;
+    private Long commentId;
+    private String userName;
     private String content;
     private LocalDateTime createdAt;
 }

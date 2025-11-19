@@ -1,5 +1,7 @@
-package com.springboot.readup.like;
+package com.springboot.readup.like.controller;
 
+import com.springboot.readup.like.CommunityLikeService;
+import com.springboot.readup.like.LikeToggle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

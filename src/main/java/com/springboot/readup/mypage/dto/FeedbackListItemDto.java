@@ -15,4 +15,6 @@ public class FeedbackListItemDto {
     private Integer score;
     private String summaryPreview;
     private LocalDateTime createdAt;
+
+    private long likeCount;
 }

@@ -1,4 +1,4 @@
-package com.springboot.readup.like;
+package com.springboot.readup.like.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
