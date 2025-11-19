@@ -42,13 +42,11 @@ public class CommunityLikeService {
             throw new IllegalArgumentException("요약글을 찾을 수 없습니다.");
         }
 
-        // 내가 이 글에 눌러둔 좋아요 있는지 확인
         LikeEntity like = likeRepository.findByUserIdAndSummaryId(me.getId(), summaryId);
 
         boolean nowLiked;
 
         if (like == null) {
-            // 아직 안 눌렀으면 → 새로 추가
             LikeEntity newLike = LikeEntity.builder()
                     .userId(me.getId())
                     .summaryId(summaryId)
@@ -56,7 +54,6 @@ public class CommunityLikeService {
             likeRepository.save(newLike);
             nowLiked = true;
         } else {
-            // 이미 눌렀으면 → 삭제 (좋아요 취소)
             likeRepository.delete(like);
             nowLiked = false;
         }
