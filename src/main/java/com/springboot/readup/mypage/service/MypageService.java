@@ -38,6 +38,7 @@ public class MypageService {
         int streak = summaryRepo.streakDays(userId);
 
         return MypageStatsResponse.builder()
+                .nickname(user.getNickname())
                 .totalSummaries(total)
                 .averageScore(avg)
                 .streakDays(streak)
