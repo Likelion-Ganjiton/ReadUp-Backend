@@ -78,6 +78,18 @@ public class MypageService {
                 .build();
     }
 
+    public CategoryListResponse getCategories() {
+
+        String loginId = (String) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        UserEntity user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+
+        // 저장된 카테고리 그대로 반환
+        return new CategoryListResponse(user.getCategories());
+    }
+
     public FeedbackListResponse getFeedbackList() {
 
         String loginId = (String) SecurityContextHolder.getContext()

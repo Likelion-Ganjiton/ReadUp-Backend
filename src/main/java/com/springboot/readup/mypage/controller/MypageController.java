@@ -36,4 +36,8 @@ public class MypageController {
     ) {
         return ResponseEntity.ok(mypageService.getFeedbackDetail(summaryId));
     }
+    @GetMapping("/categories")
+    public ResponseEntity<CategoryListResponse> getCategories() {
+        return ResponseEntity.ok(mypageService.getCategories());
+    }
 }
