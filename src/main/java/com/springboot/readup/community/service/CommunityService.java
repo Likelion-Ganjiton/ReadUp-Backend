@@ -61,7 +61,6 @@ public class CommunityService {
     // 커뮤니티 피드 조회
     public CommunityFeedResponse getFeedByCategory(String category) {
 
-        // 1) 뉴스 목록
         List<News> newsList = newsRepository.findByCategory(category);
         if (newsList.isEmpty()) {
             return CommunityFeedResponse.builder()
@@ -70,12 +69,10 @@ public class CommunityService {
                     .build();
         }
 
-        // 뉴스 ID만 추출
         List<Long> newsIds = newsList.stream()
                 .map(News::getId)
                 .toList();
 
-        // 2) 요약문 모두 가져오기
         List<UserSummaryEntity> summaries =
                 userSummaryRepository.findByNewsIdIn(newsIds);
 
@@ -86,39 +83,31 @@ public class CommunityService {
                     .build();
         }
 
-        // summaryId 리스트
         List<Long> summaryIds = summaries.stream()
                 .map(UserSummaryEntity::getId)
                 .toList();
 
-        // 3) 좋아요 카운트를 summaryId 기준으로 한 번에 조회
+        // 좋아요 카운트
         List<Object[]> likeCountRows = likeRepository.countLikesGroupBySummaryIds(summaryIds);
-
         Map<Long, Long> likeCountMap = new HashMap<>();
         for (Object[] row : likeCountRows) {
-            Long sId = (Long) row[0];
-            Long cnt = (Long) row[1];
-            likeCountMap.put(sId, cnt);
+            likeCountMap.put((Long) row[0], (Long) row[1]);
         }
 
-        // 4) 댓글 카운트도 한 번에 조회
+        // 댓글 카운트
         List<Object[]> commentCountRows = commentRepository.countCommentsGroupBySummaryIds(summaryIds);
-
         Map<Long, Long> commentCountMap = new HashMap<>();
         for (Object[] row : commentCountRows) {
-            Long sId = (Long) row[0];
-            Long cnt = (Long) row[1];
-            commentCountMap.put(sId, cnt);
+            commentCountMap.put((Long) row[0], (Long) row[1]);
         }
 
-        // 5) AI 점수도 summaryId 기준으로 조회(있으면 사용)
+        // AI 점수
         Map<Long, Integer> aiScoreMap = new HashMap<>();
         for (Long sId : summaryIds) {
             aiFeedbackRepository.findByUserSummaryId(sId)
                     .ifPresent(a -> aiScoreMap.put(sId, a.getAiScore()));
         }
 
-        // 6) DTO 변환
         List<FeedSummaryResponse> result = new ArrayList<>();
 
         for (UserSummaryEntity summary : summaries) {
@@ -138,7 +127,7 @@ public class CommunityService {
                             .newsId(news.getId())
                             .category(news.getCategory())
                             .title(news.getTitle())
-                            .userName(writer.getLoginId())
+                            .userName(writer.getNickname())
                             .userSummary(summary.getUserSummary())
                             .clarityScore(aiScoreMap.getOrDefault(summary.getId(), 0))
                             .likeCount(likeCountMap.getOrDefault(summary.getId(), 0L))
@@ -159,37 +148,32 @@ public class CommunityService {
 
         UserEntity me = getCurrentUser();
 
-        // 1) 요약문
         UserSummaryEntity summary = userSummaryRepository.findById(summaryId)
                 .orElseThrow(() -> new IllegalArgumentException("요약글을 찾을 수 없습니다."));
 
-        // 2) 뉴스
         News news = newsRepository.findById(summary.getNewsId())
                 .orElseThrow(() -> new IllegalArgumentException("뉴스를 찾을 수 없습니다."));
 
-        // 3) 작성자
         UserEntity writer = userRepository.findById(summary.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("작성자 정보를 찾을 수 없습니다."));
 
-        // 4) 좋아요 수 / 내가 좋아요 눌렀는지
         long likeCount = likeRepository.countBySummaryId(summaryId);
         boolean likedByMe =
                 likeRepository.findByUserIdAndSummaryId(me.getId(), summaryId) != null;
 
-        // 5) AI 점수 (optional)
         int clarityScore = aiFeedbackRepository.findByUserSummaryId(summaryId)
                 .map(AiFeedback::getAiScore)
                 .orElse(0);
 
-        // 6) 댓글 전체 조회
         List<CommentEntity> commentEntities =
                 commentRepository.findBySummaryIdOrderByCreatedAtDesc(summaryId);
 
         List<CommentResponse> comments = new ArrayList<>();
 
         for (CommentEntity c : commentEntities) {
+
             String writerName = userRepository.findById(c.getUserId())
-                    .map(UserEntity::getLoginId)
+                    .map(UserEntity::getNickname)
                     .orElse("알 수 없음");
 
             comments.add(
@@ -212,7 +196,7 @@ public class CommunityService {
 
         SummaryDetailResponse summaryResponse = SummaryDetailResponse.builder()
                 .summaryId(summary.getId())
-                .userName(writer.getLoginId())
+                .userName(writer.getNickname())
                 .userSummary(summary.getUserSummary())
                 .clarityScore(clarityScore)
                 .likeCount(likeCount)
