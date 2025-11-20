@@ -38,6 +38,7 @@ public class MypageService {
         int streak = summaryRepo.streakDays(userId);
 
         return MypageStatsResponse.builder()
+                .nickname(user.getNickname())
                 .totalSummaries(total)
                 .averageScore(avg)
                 .streakDays(streak)
@@ -100,7 +101,7 @@ public class MypageService {
         String loginId = (String) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
-        UserEntity user = userRepository.findByLoginId(loginId)
+        userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
         FeedbackDetailDto detail = feedbackDetailRepository.findDetail(summaryId);

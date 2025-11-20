@@ -24,5 +24,9 @@ public class FeedbackDetailDto {
     private Integer aiScore;
     private String goodPoints;
     private String badPoints;
+    private String feedback;
     private String aiRevisedSummary;
+
+    // 좋아요 개수
+    private long likeCount;
 }

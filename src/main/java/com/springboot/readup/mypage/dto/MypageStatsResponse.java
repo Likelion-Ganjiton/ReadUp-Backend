@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class MypageStatsResponse {
 
+    private String nickname;
     private int totalSummaries;
     private Double averageScore;
     private int streakDays;
