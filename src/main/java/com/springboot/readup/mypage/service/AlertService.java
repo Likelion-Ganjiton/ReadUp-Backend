@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,6 +29,7 @@ public class AlertService {
         return user.getAlertTimes();
     }
 
+    // 알림 시간 저장
     public void updateAlertTimes(AlertRequestDto requestDto) {
         UserEntity user = getCurrentUser();
 
@@ -35,7 +37,8 @@ public class AlertService {
                 .map(a -> a.getDay() + " " + a.getTime())
                 .toList();
 
-        user.setAlertTimes(converted);
+        user.setAlertTimes(new ArrayList<>(converted));
+
         userRepository.save(user);
     }
 }

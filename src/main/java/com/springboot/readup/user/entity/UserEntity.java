@@ -3,6 +3,7 @@ package com.springboot.readup.user.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,7 +44,7 @@ public class UserEntity {
     @ElementCollection
     @CollectionTable(name = "user_alert_times", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "alert_time")
-    private List<String> alertTimes;
+    private List<String> alertTimes = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
