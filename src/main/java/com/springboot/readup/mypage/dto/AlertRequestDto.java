@@ -5,5 +5,5 @@ import java.util.List;
 
 @Getter
 public class AlertRequestDto {
-    private List<String> alertTimes;
+    private List<AlertTimeDto> alertTimes;
 }

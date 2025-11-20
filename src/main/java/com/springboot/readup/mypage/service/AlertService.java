@@ -15,7 +15,7 @@ public class AlertService {
 
     private final UserRepository userRepository;
 
-    // 현재 로그인 사용자 가져오기 (JWT에서 loginId 추출)
+    // 현재 로그인 사용자 가져오기
     private UserEntity getCurrentUser() {
         String loginId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.findByLoginId(loginId)
@@ -28,10 +28,14 @@ public class AlertService {
         return user.getAlertTimes();
     }
 
-    // 알림 시간 저장
     public void updateAlertTimes(AlertRequestDto requestDto) {
         UserEntity user = getCurrentUser();
-        user.setAlertTimes(requestDto.getAlertTimes());
+
+        List<String> converted = requestDto.getAlertTimes().stream()
+                .map(a -> a.getDay() + " " + a.getTime())
+                .toList();
+
+        user.setAlertTimes(converted);
         userRepository.save(user);
     }
 }
