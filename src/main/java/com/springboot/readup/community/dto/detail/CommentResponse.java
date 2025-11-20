@@ -13,4 +13,6 @@ public class CommentResponse {
     private String userName;
     private String content;
     private LocalDateTime createdAt;
+    private boolean isMyComment;
+
 }

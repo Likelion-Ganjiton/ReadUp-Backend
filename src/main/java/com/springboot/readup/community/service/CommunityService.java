@@ -6,7 +6,6 @@ import com.springboot.readup.community.dto.detail.*;
 import com.springboot.readup.community.dto.feed.*;
 import com.springboot.readup.feedback.entity.AiFeedback;
 import com.springboot.readup.feedback.repository.AiFeedbackRepository;
-import com.springboot.readup.like.entity.LikeEntity;
 import com.springboot.readup.like.repository.LikeRepository;
 import com.springboot.readup.news.entity.News;
 import com.springboot.readup.news.repository.NewsRepository;
@@ -33,7 +32,6 @@ public class CommunityService {
     private final CommentRepository commentRepository;
     private final AiFeedbackRepository aiFeedbackRepository;
 
-    // 현재 로그인 사용자 조회
     private UserEntity getCurrentUser() {
         String loginId = (String) SecurityContextHolder
                 .getContext()
@@ -44,10 +42,8 @@ public class CommunityService {
                 .orElseThrow(() -> new IllegalArgumentException("로그인된 유저를 찾을 수 없습니다."));
     }
 
-    // 상대시간 계산
     private String convertToRelativeTime(LocalDateTime createdAt) {
         Duration duration = Duration.between(createdAt, LocalDateTime.now());
-
         long minutes = duration.toMinutes();
         long hours = duration.toHours();
         long days = duration.toDays();
@@ -58,7 +54,6 @@ public class CommunityService {
         return days + "일 전";
     }
 
-    // 커뮤니티 피드 조회
     public CommunityFeedResponse getFeedByCategory(String category) {
 
         List<News> newsList = newsRepository.findByCategory(category);
@@ -87,21 +82,18 @@ public class CommunityService {
                 .map(UserSummaryEntity::getId)
                 .toList();
 
-        // 좋아요 카운트
         List<Object[]> likeCountRows = likeRepository.countLikesGroupBySummaryIds(summaryIds);
         Map<Long, Long> likeCountMap = new HashMap<>();
         for (Object[] row : likeCountRows) {
             likeCountMap.put((Long) row[0], (Long) row[1]);
         }
 
-        // 댓글 카운트
         List<Object[]> commentCountRows = commentRepository.countCommentsGroupBySummaryIds(summaryIds);
         Map<Long, Long> commentCountMap = new HashMap<>();
         for (Object[] row : commentCountRows) {
             commentCountMap.put((Long) row[0], (Long) row[1]);
         }
 
-        // AI 점수
         Map<Long, Integer> aiScoreMap = new HashMap<>();
         for (Long sId : summaryIds) {
             aiFeedbackRepository.findByUserSummaryId(sId)
@@ -143,7 +135,6 @@ public class CommunityService {
                 .build();
     }
 
-    // 요약문 상세보기
     public CommunityDetailResponse getSummaryDetail(Long summaryId) {
 
         UserEntity me = getCurrentUser();
@@ -176,12 +167,15 @@ public class CommunityService {
                     .map(UserEntity::getNickname)
                     .orElse("알 수 없음");
 
+            boolean isMyComment = c.getUserId().equals(me.getId());
+
             comments.add(
                     CommentResponse.builder()
                             .commentId(c.getId())
                             .userName(writerName)
                             .content(c.getContent())
                             .createdAt(c.getCreatedAt())
+                            .isMyComment(isMyComment)
                             .build()
             );
         }
