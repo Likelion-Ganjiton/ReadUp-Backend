@@ -56,6 +56,8 @@ public class CommunityService {
 
     public CommunityFeedResponse getFeedByCategory(String category) {
 
+        UserEntity me = getCurrentUser();
+
         List<News> newsList = newsRepository.findByCategory(category);
         if (newsList.isEmpty()) {
             return CommunityFeedResponse.builder()
@@ -113,6 +115,9 @@ public class CommunityService {
             UserEntity writer = userRepository.findById(summary.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("작성자 없음"));
 
+            boolean likedByMe =
+                    likeRepository.findByUserIdAndSummaryId(me.getId(), summary.getId()) != null;
+
             result.add(
                     FeedSummaryResponse.builder()
                             .summaryId(summary.getId())
@@ -125,6 +130,7 @@ public class CommunityService {
                             .likeCount(likeCountMap.getOrDefault(summary.getId(), 0L))
                             .commentCount(commentCountMap.getOrDefault(summary.getId(), 0L))
                             .createdAtText(convertToRelativeTime(summary.getCreatedAt()))
+                            .likedByMe(likedByMe)   // ⭐ 추가됨
                             .build()
             );
         }

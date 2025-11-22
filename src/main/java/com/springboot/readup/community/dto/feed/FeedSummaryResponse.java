@@ -18,5 +18,6 @@ public class FeedSummaryResponse {
     private int clarityScore;
     private long likeCount;
     private long commentCount;
-    private String createdAtText;    // "2시간 전"
+    private String createdAtText;
+    private boolean likedByMe;
 }
